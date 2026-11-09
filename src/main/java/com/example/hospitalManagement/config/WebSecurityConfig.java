@@ -1,6 +1,8 @@
 package com.example.hospitalManagement.config;
 
 
+import com.example.hospitalManagement.config.security.CustomAccessDeniedHandler;
+import com.example.hospitalManagement.config.security.CustomAuthenticationEntryPoint;
 import com.example.hospitalManagement.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
@@ -41,6 +45,10 @@ public class WebSecurityConfig {
                 )*/
 
                 // JWT — Lesson 7: Role-Based Authorization
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**", "/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
