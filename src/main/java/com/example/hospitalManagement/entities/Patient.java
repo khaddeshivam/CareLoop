@@ -72,4 +72,12 @@ public class Patient {
     @OneToMany(mappedBy = "patient", cascade = {CascadeType.REMOVE}, orphanRemoval = true, fetch = FetchType.LAZY)
 //    @ToString.Exclude
     private List<Appointment> appointments = new ArrayList<>();
+
+    // Lesson 11 — Authenticated User Identity & Resource Ownership
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "user_id",
+            unique = true
+    )
+    private User user;
 }

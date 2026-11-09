@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
@@ -51,4 +52,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     //    @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.appointments a LEFT JOIN FETCH a.doctor")
     @Query("SELECT p FROM Patient p LEFT JOIN FETCH p.appointments")
     List<Patient> findAllPatientWithAppointment();
+
+    // Lesson 11 — Authenticated User Identity & Resource Ownership
+    Optional<Patient> findByUser_id(Long id);
 }

@@ -3,11 +3,13 @@ package com.example.hospitalManagement.controller;
 import com.example.hospitalManagement.dto.CreateAppointmentRequestDto;
 import com.example.hospitalManagement.dto.PatientProfileResponseDto;
 import com.example.hospitalManagement.entities.Patient;
+import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.services.AppointmentService;
 import com.example.hospitalManagement.services.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +29,10 @@ public class PatientController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<PatientProfileResponseDto> getPatientProfile() {
-        int patientId = 4;
-        return ResponseEntity.ok(patientService.getPatientById(patientId));
+    public ResponseEntity<PatientProfileResponseDto> getPatientProfile(
+            @AuthenticationPrincipal User autheticatedUser) {
+
+        return ResponseEntity.ok(patientService.getMyPatientProfile(autheticatedUser));
     }
 
 }
