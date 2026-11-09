@@ -32,14 +32,24 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionConfig ->
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
+                /*.authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/public/**", "/auth/**").permitAll()
                                 .anyRequest().authenticated()
 //                        .requestMatchers("/admin/**").hasRole("ADMIN")
 //                        .requestMatchers("/doctors/**").hasAnyRole("ADMIN", "DOCTOR")
+
+                )*/
+
+                // JWT — Lesson 7: Role-Based Authorization
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/public/**", "/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/doctors/**").hasAnyRole("ADMIN", "DOCTOR")
+                        .requestMatchers("/patients/**").hasAnyRole("ADMIN", "PATIENT")
+
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
 //                .formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
