@@ -50,6 +50,7 @@ public class AuthService {
         user = userRepository.save(User.builder()
                 .username(signupRequestDto.getUsername())
                 .password(passwordEncoder.encode(signupRequestDto.getPassword())) // encode the password
+                .role("PATIENT")
                 .build());
 
         return new SignupResponseDto(user.getId(), user.getUsername());
