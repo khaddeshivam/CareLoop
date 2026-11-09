@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.services;
 
+import com.example.hospitalManagement.dto.PatientProfileResponseDto;
 import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.repository.PatientRepository;
 import jakarta.transaction.Transactional;
@@ -12,13 +13,30 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
+//    @Transactional
+//    public Patient getPatientById(int Id){
+//
+//        Patient p1 = patientRepository.findById(Id).orElseThrow();
+//
+
+    /// /        Patient p2 = patientRepository.findById(Id).orElseThrow();
+//
+//        return p1;
+//    }
     @Transactional
-    public Patient getPatientById(int Id){
+    public PatientProfileResponseDto getPatientById(int id) {
 
-        Patient p1 = patientRepository.findById(Id).orElseThrow();
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow();
 
-//        Patient p2 = patientRepository.findById(Id).orElseThrow();
-
-        return p1;
+        return PatientProfileResponseDto.builder()
+                .id(patient.getId())
+                .firstName(patient.getFirstName())
+                .lastName(patient.getLastName())
+                .dateOfBirth(patient.getDateOfBirth())
+                .gender(patient.getGender())
+                .bloodGroup(patient.getBloodGroup())
+                .phoneNumber(patient.getPhoneNumber())
+                .build();
     }
 }
