@@ -92,6 +92,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
+
+        // Check Empty or malformed Bearer token
+        if(token.isBlank()){
+            log.warn("Empty JWT token received");
+
+            SecurityContextHolder.clearContext();
+
+            authenticationEntryPoint.commence(
+                    request,
+                    response,
+                    new BadCredentialsException("Invalid or expired JWT")
+            );
+
+            return;
+        }
+
         try {
             // Extract username from JWT.
             String username = authUtil.getUsernameFromToken(token);
