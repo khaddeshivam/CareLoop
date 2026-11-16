@@ -4,13 +4,19 @@ import com.example.hospitalManagement.controller.SignupResponseDto;
 import com.example.hospitalManagement.dto.LoginRequestDto;
 import com.example.hospitalManagement.dto.LoginResponseDto;
 import com.example.hospitalManagement.entities.User;
+import com.example.hospitalManagement.entities.type.AuthProviderType;
 import com.example.hospitalManagement.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final AuthProviderType authProviderType;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Authentication authentication = authenticationManager.authenticate(
@@ -41,7 +48,7 @@ public class AuthService {
         return new LoginResponseDto(token, user.getId());
     }
 
-    public SignupResponseDto signup(LoginRequestDto signupRequestDto) {
+    public User signupInternal(LoginRequestDto signupRequestDto) {
         // Check if user already exists or not
         User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
 
@@ -53,6 +60,55 @@ public class AuthService {
                 .role("PATIENT")
                 .build());
 
+        return userRepository.save(user);
+    }
+
+    // Login Controller (Basic when using name, email)
+    public SignupResponseDto signup(LoginRequestDto signupRequestDto) {
+        User user = signupInternal(signupRequestDto);
         return new SignupResponseDto(user.getId(), user.getUsername());
+    }
+
+    public ResponseEntity<LoginResponseDto> handleOAuth2LoginRequest(OAuth2User oAuth2User, String registrationId) {
+        // 1. Fetch providersType and providerId
+        AuthProviderType providerType = authUtil.getProviderTypeFromRegistrationId(registrationId);
+        String providerId = authUtil.determineProviderIdFromOAuth2User(oAuth2User, registrationId);
+
+        // Check in DB that user exists or not
+        User user = userRepository.findByProviderIdAndProviderType(providerId, providerType).orElse(null);
+
+        // Check if logged in with email id  or provider username
+        String email = oAuth2User.getAttribute("email");
+        String name = oAuth2User.getAttribute("name");
+
+        User emailUser = userRepository.findByUsername(email).orElse(null);
+
+        // 2. Save the providerType and providerId info with user
+        if (user == null && emailUser == null) {
+            // signup flow
+            String username = authUtil.determineUsernameFromOAuth2User(oAuth2User, registrationId, providerId);
+            user = signupInternal(new LoginRequestDto(username, null));
+
+            user.setProviderId(providerId);
+            user.setProviderType(providerType);
+
+            userRepository.save(user);
+
+        } else if (user != null) {
+
+            // 3. If the user has already account then -> direct login
+            if (email != null && !email.isBlank() && !email.equals(user.getUsername())) {
+                user.setUsername(email);
+                userRepository.save(user);
+            }
+        } else {
+
+            // 4. orElse -> signup
+            throw new BadCredentialsException("This email is already registered with provider " + emailUser.getProviderType());
+        }
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto(authUtil.generateAccessToken(user), user.getId());
+
+        return ResponseEntity.ok(loginResponseDto);
     }
 }
