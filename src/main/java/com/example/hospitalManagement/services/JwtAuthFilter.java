@@ -75,11 +75,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 //        }
 //    }
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         log.info("Incoming request: {}", request.getRequestURI());
 
@@ -94,16 +90,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         // Check Empty or malformed Bearer token
-        if(token.isBlank()){
+        if (token.isBlank()) {
             log.warn("Empty JWT token received");
 
             SecurityContextHolder.clearContext();
 
-            authenticationEntryPoint.commence(
-                    request,
-                    response,
-                    new BadCredentialsException("Invalid or expired JWT")
-            );
+            authenticationEntryPoint.commence(request, response, new BadCredentialsException("Invalid or expired JWT"));
 
             return;
         }
@@ -118,17 +110,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // Authenticate only if no authentication exists.
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                User user = userRepository.findByUsername(username)
-                        .orElseThrow(() ->
-                                new UsernameNotFoundException("User not found")
-                        );
+                User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                user,
-                                null,
-                                user.getAuthorities()
-                        );
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -136,11 +120,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         } catch (JwtException | UsernameNotFoundException ex) {
             log.warn("JWT authentication failed: {}", ex.getClass().getSimpleName());
             SecurityContextHolder.clearContext();
-            authenticationEntryPoint.commence(
-                    request,
-                    response,
-                    new BadCredentialsException("Invalid or expired JWT", ex)
-            );
+            authenticationEntryPoint.commence(request, response, new BadCredentialsException("Invalid or expired JWT", ex));
 
             return;
         }
