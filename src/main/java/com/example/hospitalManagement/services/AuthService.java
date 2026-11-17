@@ -3,8 +3,12 @@ package com.example.hospitalManagement.services;
 import com.example.hospitalManagement.controller.SignupResponseDto;
 import com.example.hospitalManagement.dto.LoginRequestDto;
 import com.example.hospitalManagement.dto.LoginResponseDto;
+import com.example.hospitalManagement.dto.SignUpRequestDto;
+import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.entities.type.AuthProviderType;
+import com.example.hospitalManagement.entities.type.RoleType;
+import com.example.hospitalManagement.repository.PatientRepository;
 import com.example.hospitalManagement.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -25,10 +31,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final AuthProviderType authProviderType;
+    //    private final AuthProviderType authProviderType;
+    private final PatientRepository patientRepository;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.getUsername(),
+                        loginRequestDto.getPassword()
+                ));
         // CustomUserDetailsService returns Spring Security's User, not your JPA entity.
 
         // Fetch the actual JPA entity after successful authentication
@@ -42,21 +53,40 @@ public class AuthService {
         return new LoginResponseDto(token, user.getId());
     }
 
-    public User signupInternal(LoginRequestDto signupRequestDto) {
+    @Transactional
+    public User signupInternal(SignUpRequestDto signupRequestDto, String providerId) {
         // Check if user already exists or not
         User user = userRepository.findByUsername(signupRequestDto.getUsername()).orElse(null);
 
         if (user != null) throw new IllegalArgumentException("User already exists");
 
-        user = userRepository.save(User.builder().username(signupRequestDto.getUsername()).password(passwordEncoder.encode(signupRequestDto.getPassword())) // encode the password
-                .role("PATIENT").build());
+        user = userRepository.save(User
+                .builder()
+                .username(signupRequestDto.getUsername())
+                .password(signupRequestDto.getPassword() != null
+                        ? passwordEncoder.encode(signupRequestDto.getPassword())
+                        : null
+                ) // encode the password
+                .roles(Set.of(RoleType.PATIENT))
+                .build());
 
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        // Save in futur if any Patient details changes
+        Patient patient = Patient.builder()
+                .firstName(signupRequestDto.getFirstName())
+                .lastName(signupRequestDto.getLastName())
+                .user(user)
+                .build();
+
+        patientRepository.save(patient);
+
+        return user;
     }
 
     // Login Controller (Basic when using name, email)
-    public SignupResponseDto signup(LoginRequestDto signupRequestDto) {
-        User user = signupInternal(signupRequestDto);
+    public SignupResponseDto signup(SignUpRequestDto signupRequestDto) {
+        User user = signupInternal(signupRequestDto, null);
         return new SignupResponseDto(user.getId(), user.getUsername());
     }
 
@@ -78,7 +108,7 @@ public class AuthService {
         if (user == null && emailUser == null) {
             // signup flow
             String username = authUtil.determineUsernameFromOAuth2User(oAuth2User, registrationId, providerId);
-            user = signupInternal(new LoginRequestDto(username, null));
+            user = signupInternal(new SignUpRequestDto(username, null, name, null, Set.of(RoleType.PATIENT)), providerId);
 
             user.setProviderId(providerId);
             user.setProviderType(providerType);
