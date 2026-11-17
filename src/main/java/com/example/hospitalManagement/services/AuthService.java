@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -29,17 +28,12 @@ public class AuthService {
 //    private final AuthProviderType authProviderType;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.getUsername(),
-                        loginRequestDto.getPassword())
-        );
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword()));
         // CustomUserDetailsService returns Spring Security's User, not your JPA entity.
 
         // Fetch the actual JPA entity after successful authentication
         // User user = (User) authentication.getPrincipal();
-        User user = userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Generate JWT using AuthUtil
         // Now that authentication is successful, your application can issue a JWT.
@@ -54,11 +48,8 @@ public class AuthService {
 
         if (user != null) throw new IllegalArgumentException("User already exists");
 
-        user = userRepository.save(User.builder()
-                .username(signupRequestDto.getUsername())
-                .password(passwordEncoder.encode(signupRequestDto.getPassword())) // encode the password
-                .role("PATIENT")
-                .build());
+        user = userRepository.save(User.builder().username(signupRequestDto.getUsername()).password(passwordEncoder.encode(signupRequestDto.getPassword())) // encode the password
+                .role("PATIENT").build());
 
         return userRepository.save(user);
     }
