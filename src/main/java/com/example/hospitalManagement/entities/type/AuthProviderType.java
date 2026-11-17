@@ -1,7 +1,6 @@
 package com.example.hospitalManagement.entities.type;
 
-public enum
-AuthProviderType {
+public enum AuthProviderType {
     GITHUB,
     GOOGLE,
     FACEBOOK,
