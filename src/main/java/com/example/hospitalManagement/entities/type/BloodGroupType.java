@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-
 public enum BloodGroupType {
     A_POSITIVE("A+"),
     A_NEGATIVE("A-"),

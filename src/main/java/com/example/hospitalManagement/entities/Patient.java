@@ -2,9 +2,7 @@ package com.example.hospitalManagement.entities;
 
 import com.example.hospitalManagement.entities.type.BloodGroupType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -27,6 +25,9 @@ import java.util.List;
 //                @Index(name = "idx_patient_birth_date", columnList = "dateOfBirth")
 //        }
 //)
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 public class Patient {
 
     @Id
@@ -75,6 +76,8 @@ public class Patient {
 
     // Lesson 11 — Authenticated User Identity & Resource Ownership
     @OneToOne(fetch = FetchType.LAZY)
+    // Mapping Patient to user
+    @MapsId
     @JoinColumn(
             name = "user_id",
             unique = true

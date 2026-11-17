@@ -2,7 +2,6 @@ package com.example.hospitalManagement.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.User;
 
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +17,7 @@ public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-//
+
 //    @OneToOne
 //    @MapsId
 //    private User user;
@@ -37,4 +36,10 @@ public class Doctor {
 
     @ManyToMany
     private Set<Doctor> doctors = new HashSet<>();
+
+    // In future if any user becomes doctor
+    // Mapping user to doctor
+    @OneToOne
+    @MapsId
+    private User user;
 }
