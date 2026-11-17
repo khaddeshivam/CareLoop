@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
@@ -11,6 +12,7 @@ import lombok.Data;
  * password: The user's plain-text password.
  */
 @Data
+@AllArgsConstructor
 public class LoginRequestDto    {
 
     private String username;

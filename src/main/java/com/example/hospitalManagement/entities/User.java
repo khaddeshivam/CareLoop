@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.entities;
 
+import com.example.hospitalManagement.entities.type.AuthProviderType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.Getter;
@@ -13,7 +14,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(
+                name = "idx_provider_id_provider_type", columnList = "providerId, providerType"
+        )
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +34,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -46,4 +51,9 @@ public class User implements UserDetails {
                 new SimpleGrantedAuthority("ROLE_" + role)
         );
     }
+
+    private String providerId;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProviderType providerType;
 }
