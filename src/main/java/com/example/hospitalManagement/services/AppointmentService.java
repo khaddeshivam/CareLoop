@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.services;
 
+import com.example.hospitalManagement.dto.AppointmentResponseDto;
 import com.example.hospitalManagement.entities.Appointment;
 import com.example.hospitalManagement.entities.Doctor;
 import com.example.hospitalManagement.entities.Patient;
@@ -8,7 +9,11 @@ import com.example.hospitalManagement.repository.DoctorRepository;
 import com.example.hospitalManagement.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,7 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final AppointmentRepository appointmentRepository;
+    private final ModelMapper modelMapper;
 
     @Transactional
     public Appointment createNewAppointment(Appointment appointment, int doctor_id, int patient_id) {
@@ -45,6 +51,16 @@ public class AppointmentService {
         doctor.getAppointments().add(appointment); // just for Bi-directional consistency
 
         return appointment;
+    }
+
+    @Transactional
+    public List<AppointmentResponseDto> getAllAppointmentsOfDoctor(int doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
+
+        return doctor.getAppointments()
+                .stream()
+                .map(appointment -> modelMapper.map(appointment, AppointmentResponseDto.class))
+                .collect(Collectors.toList());
     }
 
 }
