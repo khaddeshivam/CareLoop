@@ -1,19 +1,26 @@
 package com.example.hospitalManagement.services;
 
 import com.example.hospitalManagement.dto.PatientProfileResponseDto;
+import com.example.hospitalManagement.dto.PatientResponseDto;
 import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.repository.PatientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PatientService {
 
     private final PatientRepository patientRepository;
+    private final ModelMapper modelMapper;
 
 //    @Transactional
 //    public Patient getPatientById(int Id){
@@ -63,5 +70,12 @@ public class PatientService {
         response.setPhoneNumber(patient.getPhoneNumber());
 
         return response;
+    }
+
+    public List<PatientResponseDto> getAllPatients(Integer pageNumber, Integer pageSize) {
+        return patientRepository.findAllPatients(PageRequest.of(pageNumber, pageSize))
+                .stream()
+                .map(patient -> modelMapper.map(patient, PatientResponseDto.class))
+                .collect(Collectors.toList());
     }
 }
