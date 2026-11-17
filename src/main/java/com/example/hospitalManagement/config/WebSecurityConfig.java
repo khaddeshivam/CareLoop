@@ -3,6 +3,7 @@ package com.example.hospitalManagement.config;
 
 import com.example.hospitalManagement.config.security.CustomAccessDeniedHandler;
 import com.example.hospitalManagement.config.security.CustomAuthenticationEntryPoint;
+import com.example.hospitalManagement.config.security.OAuth2SuccessHandler;
 import com.example.hospitalManagement.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,13 +34,14 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
         httpSecurity
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionConfig ->
-                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 /*.authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/public/**", "/auth/**").permitAll()
                                 .anyRequest().authenticated()
@@ -50,7 +52,7 @@ public class WebSecurityConfig {
 
                 // JWT — Lesson 7: Role-Based Authorization
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(authenticationEntryPoint)
+//                        .authenticationEntryPoint(authenticationEntryPoint) // TESTING: uncomment this line if wanted to intercept the request before Spring Security can display its default OAuth2 login page.
                         .accessDeniedHandler(accessDeniedHandler))
 
                 .authorizeHttpRequests(auth -> auth
@@ -81,6 +83,8 @@ public class WebSecurityConfig {
                                     "{\"error\":\"Google authentication failed\"}"
                             );
                         })
+                        .successHandler(oAuth2SuccessHandler)
+
                 );
 //                .formLogin(Customizer.withDefaults());
 

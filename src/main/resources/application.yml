@@ -4,5 +4,5 @@ spring.security.oauth2.client:
       client-id: ${GOOGLE_CLIENT_KEY}
       client-secret: ${GOOGLE_SECRET_KEY}
     github:
-      client-id: production@123
-      client-secret: production@123
+      client-id: ${GITHUB_CLIENT_ID}
+      client-secret: ${GITHUB_CLIENT_SCERET}
