@@ -4,6 +4,7 @@ package com.example.hospitalManagement.config;
 import com.example.hospitalManagement.config.security.CustomAccessDeniedHandler;
 import com.example.hospitalManagement.config.security.CustomAuthenticationEntryPoint;
 import com.example.hospitalManagement.config.security.OAuth2SuccessHandler;
+import com.example.hospitalManagement.entities.type.RoleType;
 import com.example.hospitalManagement.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.example.hospitalManagement.entities.type.RoleType.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -63,8 +66,8 @@ public class WebSecurityConfig {
                         ).permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/doctors/**").hasAnyRole("ADMIN", "DOCTOR")
-                        .requestMatchers("/patients/**").hasAnyRole("ADMIN", "PATIENT")
+                        .requestMatchers("/doctors/**").hasAnyRole(DOCTOR.name(), ADMIN.name())
+                        .requestMatchers("/patients/**").hasAnyRole(PATIENT.name(), ADMIN.name())
 
                         .anyRequest().authenticated()
                 )
