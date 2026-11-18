@@ -4,6 +4,7 @@ package com.example.hospitalManagement.config;
 import com.example.hospitalManagement.config.security.CustomAccessDeniedHandler;
 import com.example.hospitalManagement.config.security.CustomAuthenticationEntryPoint;
 import com.example.hospitalManagement.config.security.OAuth2SuccessHandler;
+import com.example.hospitalManagement.entities.type.PermissionType;
 import com.example.hospitalManagement.entities.type.RoleType;
 import com.example.hospitalManagement.services.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,9 +26,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.hospitalManagement.entities.type.PermissionType.*;
 import static com.example.hospitalManagement.entities.type.RoleType.*;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -64,6 +69,8 @@ public class WebSecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAnyAuthority(APPOINTMENT_DELETE.name(),
+                                MEDICAL_RECORD_UPDATE.name())
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/doctors/**").hasAnyRole(DOCTOR.name(), ADMIN.name())
