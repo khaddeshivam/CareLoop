@@ -25,7 +25,7 @@ public class AppointmentService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public Appointment createNewAppointment(Appointment appointment, int doctor_id, int patient_id) {
+    public Appointment createNewAppointment(Appointment appointment, int doctor_id, Long patient_id) {
 
         Doctor doctor = doctorRepository.findById(doctor_id).orElseThrow();
         Patient patient = patientRepository.findById(patient_id).orElseThrow();
