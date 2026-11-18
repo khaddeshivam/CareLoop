@@ -33,6 +33,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     //    private final AuthProviderType authProviderType;
     private final PatientRepository patientRepository;
+    private final RefreshTokenService refreshTokenService;
 
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         Authentication authentication = authenticationManager
@@ -48,9 +49,12 @@ public class AuthService {
 
         // Generate JWT using AuthUtil
         // Now that authentication is successful, your application can issue a JWT.
-        String token = authUtil.generateAccessToken(user);
+        String accessToken = authUtil.generateAccessToken(user);
 
-        return new LoginResponseDto(token, user.getId());
+        // Generate and persist refresh accessToken
+        String refreshToken = refreshTokenService.createRefreshToken(user).rawToken();
+
+        return new LoginResponseDto(accessToken, refreshToken, user.getId());
     }
 
     @Transactional
@@ -70,7 +74,7 @@ public class AuthService {
                 .roles(Set.of(RoleType.PATIENT))
                 .build());
 
-        user = userRepository.save(user);
+//        user = userRepository.save(user);
 
         // Save in futur if any Patient details changes
         Patient patient = Patient.builder()
@@ -128,7 +132,14 @@ public class AuthService {
             throw new BadCredentialsException("This email is already registered with provider " + emailUser.getProviderType());
         }
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto(authUtil.generateAccessToken(user), user.getId());
+        String accessToken = authUtil.generateAccessToken(user);
+        String refreshToken = refreshTokenService.createRefreshToken(user).rawToken();
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto(
+                accessToken,
+                refreshToken,
+                user.getId()
+        );
 
         return ResponseEntity.ok(loginResponseDto);
     }

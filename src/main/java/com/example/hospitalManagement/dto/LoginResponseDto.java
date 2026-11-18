@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponseDto {
 
-    String jwt;
-    Long userId;
+    private String jwt;
+    private String refreshToken;
+    private Long userId;
 }
