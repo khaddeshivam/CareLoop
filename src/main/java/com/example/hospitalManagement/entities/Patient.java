@@ -33,7 +33,7 @@ public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "patient_id") // Maps Java field to PostgreSQL 'patient_id'
-    private int id;              // Matches your primary key type
+    private Long id;              // Matches your primary key type
 
     @Column(name = "first_name")
     private String firstName;    // CamelCase maps automatically to snake_case
@@ -50,7 +50,7 @@ public class Patient {
     private String gender;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "blood_group", nullable = false, length = 30)
+    @Column(name = "blood_group", nullable = true, length = 30)
     private BloodGroupType bloodGroup;  // Changed from String to Enum type
 
     @Column(name = "phone")      // CRITICAL FIX: Directs Hibernate to read 'phone' instead of 'phone_number'

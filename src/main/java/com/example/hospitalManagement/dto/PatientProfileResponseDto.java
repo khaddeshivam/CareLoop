@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PatientProfileResponseDto {
 
-    private int id;
+    private Long id;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;

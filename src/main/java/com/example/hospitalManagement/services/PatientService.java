@@ -33,7 +33,7 @@ public class PatientService {
 //        return p1;
 //    }
     @Transactional
-    public PatientProfileResponseDto getPatientById(int id) {
+    public PatientProfileResponseDto getPatientById(Long id) {
 
         Patient patient = patientRepository.findById(id)
                 .orElseThrow();
