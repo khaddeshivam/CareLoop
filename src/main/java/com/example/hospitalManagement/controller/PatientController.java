@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.controller;
 
+import com.example.hospitalManagement.dto.AppointmentResponseDto;
 import com.example.hospitalManagement.dto.CreateAppointmentRequestDto;
 import com.example.hospitalManagement.dto.PatientProfileResponseDto;
 import com.example.hospitalManagement.entities.Patient;
@@ -20,17 +21,26 @@ public class PatientController {
     private final PatientService patientService;
     private final AppointmentService appointmentService;
 
+//    @PostMapping("/appointments")
+//    public ResponseEntity<AppointmentService> createNewAppointment(
+//            @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto) {
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(appointmentService);
+//    }
+
     @PostMapping("/appointments")
-    public ResponseEntity<AppointmentService> createNewAppointment(
-            @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(appointmentService);
+    public ResponseEntity<AppointmentResponseDto> createNewAppointment(
+            @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto,
+            @AuthenticationPrincipal User authenticatedUser) {
+        AppointmentResponseDto response = appointmentService.createAppointmentForAuthenticatedPatient(createAppointmentRequestDto, authenticatedUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @GetMapping("/profile")
-    public ResponseEntity<PatientProfileResponseDto> getPatientProfile(
-            @AuthenticationPrincipal User autheticatedUser) {
+    public ResponseEntity<PatientProfileResponseDto> getPatientProfile(@AuthenticationPrincipal User autheticatedUser) {
 
         return ResponseEntity.ok(patientService.getMyPatientProfile(autheticatedUser));
     }

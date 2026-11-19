@@ -1,4 +1,4 @@
-package com.example.hospitalManagement.services;
+package com.example.hospitalManagement;
 
 import com.example.hospitalManagement.entities.Appointment;
 import com.example.hospitalManagement.entities.Doctor;
@@ -6,6 +6,7 @@ import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.repository.AppointmentRepository;
 import com.example.hospitalManagement.repository.DoctorRepository;
 import com.example.hospitalManagement.repository.PatientRepository;
+import com.example.hospitalManagement.services.AppointmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

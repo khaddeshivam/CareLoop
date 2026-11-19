@@ -34,10 +34,10 @@ public class AppointmentTest {
                 .reason("Cancer")
                 .build();
 
-        var newAppointment = appointmentService.createNewAppointment(appointment, 1, 2);
+        var newAppointment = appointmentService.createNewAppointment(appointment, 1L, 2L);
         System.out.println(newAppointment);
 
-        var upadatedAppointment = appointmentService.reAssignAppointmentToAnotherDoctor(newAppointment.getId(), 3);
+        var upadatedAppointment = appointmentService.reAssignAppointmentToAnotherDoctor(newAppointment.getId(), 3L);
         System.out.println(upadatedAppointment);
     }
 }
