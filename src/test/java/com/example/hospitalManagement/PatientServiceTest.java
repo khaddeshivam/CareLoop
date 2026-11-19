@@ -1,9 +1,10 @@
-package com.example.hospitalManagement.services;
+package com.example.hospitalManagement;
 
 import com.example.hospitalManagement.dto.PatientProfileResponseDto;
 import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.repository.PatientRepository;
+import com.example.hospitalManagement.services.PatientService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

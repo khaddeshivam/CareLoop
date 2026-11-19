@@ -73,9 +73,16 @@ public class PatientService {
     }
 
     public List<PatientResponseDto> getAllPatients(Integer pageNumber, Integer pageSize) {
+        modelMapper.getConfiguration()
+                .setAmbiguityIgnored(true);
         return patientRepository.findAllPatients(PageRequest.of(pageNumber, pageSize))
                 .stream()
-                .map(patient -> modelMapper.map(patient, PatientResponseDto.class))
+                .map(patient -> {
+                            PatientResponseDto dto = modelMapper.map(patient, PatientResponseDto.class);
+                            dto.setName(patient.getFirstName() + " " + patient.getLastName());
+                            return dto;
+                        }
+                )
                 .collect(Collectors.toList());
     }
 }
