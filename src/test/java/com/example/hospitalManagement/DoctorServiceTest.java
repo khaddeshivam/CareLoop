@@ -1,4 +1,4 @@
-package com.example.hospitalManagement.services;
+package com.example.hospitalManagement;
 
 import com.example.hospitalManagement.dto.DoctorResponseDto;
 import com.example.hospitalManagement.dto.OnBoardDoctorRequestDto;
@@ -7,6 +7,7 @@ import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.entities.type.RoleType;
 import com.example.hospitalManagement.repository.DoctorRepository;
 import com.example.hospitalManagement.repository.UserRepository;
+import com.example.hospitalManagement.services.DoctorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

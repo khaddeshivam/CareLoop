@@ -15,8 +15,8 @@ import java.util.Set;
 @Builder
 public class Doctor {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 //    @OneToOne
 //    @MapsId

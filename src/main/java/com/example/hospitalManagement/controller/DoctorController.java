@@ -22,7 +22,7 @@ public class DoctorController {
     @GetMapping("/appointments")
     public ResponseEntity<List<AppointmentResponseDto>> getAllAppointmentsOfDoctor() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(appointmentService.getAllAppointmentsOfDoctor(Math.toIntExact(user.getId())));
+        return ResponseEntity.ok(appointmentService.getAllAppointmentsOfDoctor(user.getId()));
     }
 
 }

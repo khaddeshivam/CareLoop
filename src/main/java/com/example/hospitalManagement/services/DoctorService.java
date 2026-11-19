@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DoctorService {
 
-    private DoctorRepository doctorRepository;
-    private UserRepository userRepository;
-    private ModelMapper modelMapper;
+    private final DoctorRepository doctorRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     public List<DoctorResponseDto> getAllDoctors(){
         return doctorRepository.findAll()
@@ -34,7 +34,7 @@ public class DoctorService {
     public DoctorResponseDto onBoardNewDoctor(OnBoardDoctorRequestDto onBoardDoctorRequestDto){
         User user = userRepository.findById(onBoardDoctorRequestDto.getUserId()).orElseThrow();
 
-        if(doctorRepository.existsById(Math.toIntExact(onBoardDoctorRequestDto.getUserId()))){
+        if(doctorRepository.existsByUser_Id(onBoardDoctorRequestDto.getUserId())){
             throw new IllegalArgumentException("Already a doctor");
         }
 
@@ -46,6 +46,8 @@ public class DoctorService {
 
         user.getRoles().add(RoleType.DOCTOR);
 
-        return modelMapper.map(doctorRepository.save(doctor), DoctorResponseDto.class);
+        Doctor savedDoctor = doctorRepository.save(doctor);
+
+        return modelMapper.map(savedDoctor, DoctorResponseDto.class);
     }
 }
