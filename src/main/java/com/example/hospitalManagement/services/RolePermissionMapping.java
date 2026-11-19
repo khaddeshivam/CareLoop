@@ -19,8 +19,8 @@ public class RolePermissionMapping {
             ADMIN, Set.of(PATIENT_READ, PATIENT_WRITE, APPOINTMENT_READ, APPOINTMENT_WRITE, APPOINTMENT_DELETE, USER_MANAGE, REPORT_VIEW)
     );
 
-    public static Set<SimpleGrantedAuthority> getGrantedForRoles(RoleType role){
-        return map.get(role)
+    public static Set<SimpleGrantedAuthority> getGrantedForRoles(RoleType roles){
+        return map.getOrDefault(roles, Set.of())
                 .stream()
                 .map(permissionType -> new SimpleGrantedAuthority(permissionType.getPermission()))
                 .collect(Collectors.toSet());

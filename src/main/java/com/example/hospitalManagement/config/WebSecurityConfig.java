@@ -69,8 +69,10 @@ public class WebSecurityConfig {
                                 "/oauth2/**",
                                 "/login/oauth2/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAnyAuthority(APPOINTMENT_DELETE.name(),
-                                MEDICAL_RECORD_UPDATE.name())
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**")
+                        .hasAnyAuthority(
+                                APPOINTMENT_DELETE.getPermission(),
+                                MEDICAL_RECORD_UPDATE.getPermission())
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/doctors/**").hasAnyRole(DOCTOR.name(), ADMIN.name())

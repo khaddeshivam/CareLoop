@@ -71,7 +71,7 @@ public class AuthService {
                         ? passwordEncoder.encode(signupRequestDto.getPassword())
                         : null
                 ) // encode the password
-                .roles(Set.of(RoleType.PATIENT))
+                .roles(signupRequestDto.getRoles())
                 .build());
 
 //        user = userRepository.save(user);
@@ -112,7 +112,7 @@ public class AuthService {
         if (user == null && emailUser == null) {
             // signup flow
             String username = authUtil.determineUsernameFromOAuth2User(oAuth2User, registrationId, providerId);
-            user = signupInternal(new SignUpRequestDto(username, null, name, null, Set.of(RoleType.PATIENT)), providerId);
+            user = signupInternal(new SignUpRequestDto(username, null, name, null, Set.of()), providerId);
 
             user.setProviderId(providerId);
             user.setProviderType(providerType);

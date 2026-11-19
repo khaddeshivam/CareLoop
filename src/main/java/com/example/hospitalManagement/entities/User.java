@@ -67,6 +67,7 @@ public class User implements UserDetails {
     private AuthProviderType providerType;
 
     // Adding Multiple Roles
+    @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     public Set<RoleType> roles = new HashSet<>();
