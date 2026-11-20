@@ -31,13 +31,14 @@ public class PatientController {
 
     @PostMapping("/appointments")
     public ResponseEntity<AppointmentResponseDto> createNewAppointment(
-            @RequestBody CreateAppointmentRequestDto createAppointmentRequestDto,
+            @RequestBody CreateAppointmentRequestDto request,
             @AuthenticationPrincipal User authenticatedUser) {
-        AppointmentResponseDto response = appointmentService.createAppointmentForAuthenticatedPatient(createAppointmentRequestDto, authenticatedUser);
+
+        AppointmentResponseDto response =
+                appointmentService.createNewAppointment(request, authenticatedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     @GetMapping("/profile")
     public ResponseEntity<PatientProfileResponseDto> getPatientProfile(@AuthenticationPrincipal User autheticatedUser) {
