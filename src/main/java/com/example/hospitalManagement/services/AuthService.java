@@ -7,7 +7,6 @@ import com.example.hospitalManagement.dto.SignUpRequestDto;
 import com.example.hospitalManagement.entities.Patient;
 import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.entities.type.AuthProviderType;
-import com.example.hospitalManagement.entities.type.RoleType;
 import com.example.hospitalManagement.repository.PatientRepository;
 import com.example.hospitalManagement.repository.UserRepository;
 import lombok.AllArgsConstructor;
