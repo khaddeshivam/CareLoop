@@ -7,6 +7,7 @@ import com.example.hospitalManagement.entities.User;
 import com.example.hospitalManagement.entities.type.RoleType;
 import com.example.hospitalManagement.repository.DoctorRepository;
 import com.example.hospitalManagement.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,7 +33,7 @@ public class DoctorService {
 
     @Transactional
     public DoctorResponseDto onBoardNewDoctor(OnBoardDoctorRequestDto onBoardDoctorRequestDto){
-        User user = userRepository.findById(onBoardDoctorRequestDto.getUserId()).orElseThrow();
+        User user = userRepository.findById(onBoardDoctorRequestDto.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if(doctorRepository.existsByUser_Id(onBoardDoctorRequestDto.getUserId())){
             throw new IllegalArgumentException("Already a doctor");

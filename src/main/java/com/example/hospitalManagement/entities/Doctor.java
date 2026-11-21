@@ -3,6 +3,7 @@ package com.example.hospitalManagement.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,8 +32,9 @@ public class Doctor {
     @Column(unique = true, length = 100)
     private String email;
 
+    @Builder.Default
     @OneToMany(mappedBy = "doctor")
-    private List<Appointment> appointments;
+    private List<Appointment> appointments = new ArrayList<>();
 
     @ManyToMany
     private Set<Doctor> doctors = new HashSet<>();

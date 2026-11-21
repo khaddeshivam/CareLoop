@@ -28,7 +28,7 @@ public class AdminController {
         return ResponseEntity.ok(patientService.getAllPatients(pageNumber, pageSize));
     }
 
-    @GetMapping("/onBoardNewDoctor")
+    @PostMapping("/onBoardNewDoctor")
     public ResponseEntity<DoctorResponseDto> onBoardNewDoctor(@RequestBody OnBoardDoctorRequestDto onBoardDoctorRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorService.onBoardNewDoctor(onBoardDoctorRequestDto));
     }
