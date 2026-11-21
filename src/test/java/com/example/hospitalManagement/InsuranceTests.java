@@ -24,7 +24,7 @@ public class InsuranceTests {
                 .build();
 
 
-        Patient patient = insuranceService.assignInsuranceToPatient(insurance, 1);
+        Patient patient = insuranceService.assignInsuranceToPatient(insurance, 1L);
 
         System.out.println(patient);
     };
@@ -38,7 +38,7 @@ public class InsuranceTests {
                 .validUntil(LocalDate.of(2030, 12, 1))
                 .build();
 
-        Patient patient = insuranceService.assignInsuranceToPatient(insurance, 2);
+        Patient patient = insuranceService.assignInsuranceToPatient(insurance, 2L);
 
         System.out.println(patient);
 

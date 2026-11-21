@@ -47,7 +47,7 @@ class AppointmentServiceTest {
 
     @Test
     void createNewAppointment_shouldAttachPatientAndDoctorAndSave() {
-        Doctor doctor = doctor(3);
+        Doctor doctor = doctor(3L);
         Patient patient = patient(11L);
 
         Appointment appointment = Appointment.builder()
@@ -74,7 +74,7 @@ class AppointmentServiceTest {
 
     @Test
     void createNewAppointment_shouldRejectAppointmentThatAlreadyHasId() {
-        Doctor doctor = doctor(3);
+        Doctor doctor = doctor(3L);
         Patient patient = patient(11L);
 
         Appointment appointment = Appointment.builder()
@@ -99,8 +99,8 @@ class AppointmentServiceTest {
 
     @Test
     void reAssignAppointmentToAnotherDoctor_shouldUpdateDoctorRelationship() {
-        Doctor previousDoctor = doctor(3);
-        Doctor newDoctor = doctor(4);
+        Doctor previousDoctor = doctor(3L);
+        Doctor newDoctor = doctor(4L);
         Patient patient = patient(11L);
 
         Appointment appointment = Appointment.builder()
@@ -130,7 +130,7 @@ class AppointmentServiceTest {
 
     @Test
     void getAllAppointmentsOfDoctor_shouldReturnEmptyListWhenDoctorHasNoAppointments() {
-        Doctor doctor = doctor(3);
+        Doctor doctor = doctor(3L);
         doctor.setAppointments(new ArrayList<>());
 
         when(doctorRepository.findById(3L)).thenReturn(Optional.of(doctor));
@@ -143,7 +143,7 @@ class AppointmentServiceTest {
         verify(doctorRepository).findById(3L);
     }
 
-    private Doctor doctor(int id) {
+    private Doctor doctor(Long id) {
         Doctor doctor = new Doctor();
         doctor.setId(id);
         doctor.setName("Doctor " + id);

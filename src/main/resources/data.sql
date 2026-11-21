@@ -6,7 +6,6 @@ VALUES ('O_POSITIVE', '1990-05-12', NULL, 'Alice', 'Female', 'Green', '555-4433'
        ('AB_POSITIVE', '1982-11-18', NULL, 'Rohan', 'Male', 'Shah', '555-9981'),
        ('O_NEGATIVE', '2001-01-30', NULL, 'Sara', 'Female', 'Khan', '555-6634');
 
-
 -- Insert doctors
 INSERT INTO doctor (name, specialization, email)
 VALUES ('Dr. Rakesh Mehta', 'Cardiology', 'rakesh.mehta@example.com'),
@@ -15,7 +14,7 @@ VALUES ('Dr. Rakesh Mehta', 'Cardiology', 'rakesh.mehta@example.com'),
 
 
 -- Insert appointments
-INSERT INTO appointment (doctor_id, patient_id, appointment_time, reason)
+INSERT INTO appointment (doctor_user_id, patient_id, appointment_time, reason, status)
 VALUES (1, 1, '2026-11-02 10:30:00', 'General Checkup'),
        (2, 2, '2026-11-02 11:00:00', 'Skin Rash'),
        (3, 3, '2026-11-03 09:45:00', 'Knee Pain'),
