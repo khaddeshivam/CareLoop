@@ -1,4 +1,7 @@
 package com.example.hospitalManagement.entities;
 
-public class AppointmentStatus {
+public enum AppointmentStatus {
+    SCHEDULED,
+    CANCELLED,
+    COMPLETED
 }

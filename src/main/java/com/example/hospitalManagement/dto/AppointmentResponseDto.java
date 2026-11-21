@@ -1,5 +1,6 @@
 package com.example.hospitalManagement.dto;
 
+import com.example.hospitalManagement.entities.AppointmentStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,4 +12,5 @@ public class AppointmentResponseDto {
     private String reason;
     private DoctorResponseDto doctor;
 //    private PatientResponseDto patient;
+    private AppointmentStatus status;
 }

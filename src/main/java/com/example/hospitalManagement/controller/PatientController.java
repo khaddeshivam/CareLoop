@@ -35,9 +35,19 @@ public class PatientController {
             @AuthenticationPrincipal User authenticatedUser) {
 
         AppointmentResponseDto response =
-                appointmentService.createNewAppointment(request, authenticatedUser);
+                appointmentService.createAppointmentForAuthenticatedPatient(request, authenticatedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/appointments/{appointmentId}")
+    public ResponseEntity<Void> cancelAppointment(
+            @PathVariable Long appointmentId,
+            @AuthenticationPrincipal User authenticatedUser) {
+
+        appointmentService.cancelAppointment(appointmentId, authenticatedUser);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/profile")

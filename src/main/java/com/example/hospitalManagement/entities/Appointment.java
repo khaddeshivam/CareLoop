@@ -32,4 +32,9 @@ public class Appointment {
     @ToString.Exclude
     @JoinColumn(nullable = false)
     private Doctor doctor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private AppointmentStatus status = AppointmentStatus.SCHEDULED;
 }
